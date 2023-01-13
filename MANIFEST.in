@@ -1,0 +1,3 @@
+include src/seeksoultools/rna/*.R
+recursive-include src/seeksoultools/utils/barcode/ *
+recursive-include src/seeksoultools/rna/template/ *
