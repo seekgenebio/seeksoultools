@@ -55,42 +55,62 @@ class Writer:
     """
     处理输出内容
     """
-    def __init__(self, file1:str, file_multi:str, file2:str=None):
+    def __init__(self, file:str, file_multi:str, paired_out:bool=False):
         """输出处理好的序列
         Args:
-            file: read2 fastq file1
+            file: read2 fastq file
             file_muti: 不能确定barcode的fastq文件名称
         """
-        self._file1 = file1
-        self._fh1 = xopen(self._file1, mode='wb')
+        self.paired_out = paired_out
 
-        self._file_multi = file_multi
-        self._fh_multi = xopen(self._file_multi, mode='wb')
+        if paired_out:
+            self.file1 = f"{file}_1.fq.gz"
+            self.file2 = f"{file}_2.fq.gz"
+            self._fh1 = xopen(self.file1, mode='wb')
+            self._fh2 = xopen(self.file2, mode='wb')
 
-        self._file2 = file2
-        if self._file2:
-            self._fh2 = xopen(self._file2, mode='wb')
+            self.file1_multi = f"{file_multi}_1.fq.gz"
+            self.file2_multi = f"{file_multi}_2.fq.gz"
+            self._fh_multi1 = xopen(self.file1_multi, mode='wb')
+            self._fh_multi2 = xopen(self.file2_multi, mode='wb')
+        else:
+            self.file = f"{file}.fq.gz"
+            self._fh1 = xopen(self.file, mode='wb')
+
+            self.file_multi = f"{file_multi}.fq.gz"
+            self._fh_multi1 = xopen(self.file_multi, mode='wb')
+
         self._chunks = dict()
         self._current_index = 0
 
     def write(self, data, index):
         self._chunks[index] = data
-        while self._current_index in self._chunks:
-            self._fh1.write(self._chunks[self._current_index][0])
-            self._fh_multi.write(self._chunks[self._current_index][1])
-            if self._file2:
-                self._fh2.write(self._chunks[self._current_index][2])
-            del self._chunks[self._current_index]
-            self._current_index += 1
+        if self.paired_out:
+            while self._current_index in self._chunks:
+                (_r1, _r2), (_multi_r1, _multi_r2) = self._chunks[self._current_index]
+                self._fh1.write(_r1)
+                self._fh2.write(_r2)
+                self._fh_multi1.write(_multi_r1)
+                self._fh_multi2.write(_multi_r2)
+                del self._chunks[self._current_index]
+                self._current_index += 1
+        else:
+            while self._current_index in self._chunks:
+                (_r1,), (_multi_r1,) = self._chunks[self._current_index]
+                self._fh1.write(_r1)
+                self._fh_multi1.write(_multi_r1)
+                del self._chunks[self._current_index]
+                self._current_index += 1            
 
     def wrote_everything(self):
         return not self._chunks
 
     def close(self):
         self._fh1.close()
-        self._fh_multi.close()
-        if self._file2:
+        self._fh_multi1.close()
+        if self.paired_out:
             self._fh2.close()
+            self._fh_multi2.close()
 
 class Worker(Process):
     """工作进程类
@@ -116,90 +136,121 @@ class Worker(Process):
                 elif chunk_index == -2:
                     e, tb_str = self.read_pipe.recv()
                     raise e
-                data = self.read_pipe.recv_bytes()
-                input = io.BytesIO(data)
-                data = self.read_pipe.recv_bytes()
-                input2 = io.BytesIO(data)
-                tmp = io.BytesIO()
-                tmp_multi = io.BytesIO()
-                if self.paired_out:
-                    tmp2 = io.BytesIO()
-                    _ = self.func(fq1=input, fq2=input2, fq_out=tmp, fqout_multi=tmp_multi, fq_out2=tmp2)
-                else:
-                    _ = self.func(fq1=input, fq2=input2, fq_out=tmp, fqout_multi=tmp_multi)
-                self.write_pipe.send(chunk_index)
-                self.write_pipe.send_bytes(tmp.getvalue())
-                self.write_pipe.send_bytes(tmp_multi.getvalue())
-                if self.paired_out:
-                    self.write_pipe.send_bytes(tmp2.getvalue())
-                self.write_pipe.send(_)
+                try:
+                    data = self.read_pipe.recv_bytes()
+                    input = io.BytesIO(data)
+                    data = self.read_pipe.recv_bytes()
+                    input2 = io.BytesIO(data)
+                    if self.paired_out:
+                        tmp = (io.BytesIO(), io.BytesIO())
+                        tmp_multi = (io.BytesIO(), io.BytesIO())
+                        _ = self.func(fq1=input, fq2=input2, fq_out=tmp, fqout_multi=tmp_multi)
+                        self.write_pipe.send(chunk_index)
+                        self.write_pipe.send_bytes(tmp[0].getvalue())
+                        self.write_pipe.send_bytes(tmp[1].getvalue())
+                        self.write_pipe.send_bytes(tmp_multi[0].getvalue())
+                        self.write_pipe.send_bytes(tmp_multi[1].getvalue())
+                        self.write_pipe.send(_)
+                    else:
+                        tmp = (io.BytesIO(),)
+                        tmp_multi = (io.BytesIO(),)
+                        _ = self.func(fq1=input, fq2=input2, fq_out=tmp, fqout_multi=tmp_multi)
+                        self.write_pipe.send(chunk_index)
+                        self.write_pipe.send_bytes(tmp[0].getvalue())
+                        self.write_pipe.send_bytes(tmp_multi[0].getvalue())
+                        self.write_pipe.send(_)
+                except Exception as e:
+                    self.write_pipe.send(-2)
+                    self.write_pipe.send((e, traceback.format_exc()))
+                    raise e  
             self.write_pipe.send(-1)
         except Exception as e:
             self.write_pipe.send(-2)
+            self.write_pipe.send((e, traceback.format_exc()))
             raise e
-
+        ##except Exception as e:
+        ##    self.write_pipe.send(-2)
+        ##    raise e
+            
 
 class Pipeline:
-    def __init__(self, func, fq1, fq2, fqout1, fqout_multi, core, stat=None, fqout2=None, buffer_size=16*1024**2):
+    def __init__(self, func, fq1, fq2, fqout, fqout_multi, core, stat=None, paired_out=False, buffer_size=16*1024**2):
         self.n_workers = core
         self.fq1 = fq1
         self.fq2 = fq2
-        self.fqout1 = fqout1
+        self.fqout = fqout
         self.fqout_multi = fqout_multi
-        self.fqout2 = fqout2
         self.buffer_size = buffer_size
         self.need_work_queue = Queue()
         self.func = func
-        self.paired_out = False
-        if self.fqout2:
-            self.paired_out = True
+        self.paired_out = paired_out
         self.stat = stat
 
     def run(self):
-        # start reader process
-        reader_connections = [Pipe(duplex=False) for _ in range(self.n_workers)]
-        _pipes, _conn = zip(*reader_connections)
-        _reader_process = Reader(self.fq1, self.fq2, _conn, self.need_work_queue, self.buffer_size)
-        _reader_process.daemon = True
-        _reader_process.start()
+        try:
+            # start reader process
+            reader_connections = [Pipe(duplex=False) for _ in range(self.n_workers)]
+            _pipes, _conn = zip(*reader_connections)
+            _reader_process = Reader(self.fq1, self.fq2, _conn, self.need_work_queue, self.buffer_size)
+            _reader_process.daemon = True
+            _reader_process.start()
 
-        # start worker processes
-        self.workers = []
-        self.connections = []
-        self.writer = Writer(self.fqout1, self.fqout_multi, self.fqout2)
-        for index in range(self.n_workers):
-            conn_r, conn_w = Pipe(duplex=False)
-            self.connections.append(conn_r)
-            worker = Worker(index, _pipes[index], conn_w, self.need_work_queue,
-                            self.func, self.paired_out)
-            worker.daemon = True
-            worker.start()
-            self.workers.append(worker)
+            self.workers = []
+            self.connections = []
+            self.writer = Writer(self.fqout, self.fqout_multi, self.paired_out)
+            for index in range(self.n_workers):
+                conn_r, conn_w = Pipe(duplex=False)
+                self.connections.append(conn_r)
+                worker = Worker(index, _pipes[index], conn_w, self.need_work_queue,
+                                self.func, self.paired_out)
+                worker.daemon = True
+                worker.start()
+                self.workers.append(worker)
 
-        # write output
-        while self.connections:
-            ready_connections = multiprocessing.connection.wait(self.connections)
-            for connection in ready_connections:
-                chunk_index = connection.recv()
-                if chunk_index == -1:
-                    self.connections.remove(connection)
-                    continue
-                elif chunk_index == -2:
-                    sys.stderr.write('err!!!\n')
-                
-                if self.paired_out:
-                    data1 = connection.recv_bytes()
-                    data_multi = connection.recv_bytes()
-                    data2 = connection.recv_bytes()
-                    self.writer.write([data1, data_multi, data2], chunk_index)
-                else:
-                    data1 = connection.recv_bytes()
-                    data_multi = connection.recv_bytes()
-                    self.writer.write([data1, data_multi], chunk_index)
-                _stat = connection.recv()
-                self.stat.update(**_stat)
-        assert self.writer.wrote_everything()
-        for w in self.workers:
-            w.join()
-        _reader_process.join()
-        self.writer.close()
+            # write output
+            while self.connections:
+                ready_connections = multiprocessing.connection.wait(self.connections)
+                for connection in ready_connections:
+                    try:
+                        chunk_index = connection.recv()
+                        if chunk_index == -1:
+                            self.connections.remove(connection)
+                            continue
+                        elif chunk_index == -2:
+                            ##sys.stderr.write('err!!!\n')
+                            error, traceback_str = connection.recv()
+                            print(f"error :\n{traceback_str}", file=sys.stderr)
+                            self._cleanup(_reader_process)
+                            raise error 
+                        # if single?
+                        data1 = connection.recv_bytes()
+                        data2 = connection.recv_bytes()
+                        data_multi1 = connection.recv_bytes()
+                        data_multi2 = connection.recv_bytes()
+                        self.writer.write([(data1, data2), (data_multi1, data_multi2)], chunk_index)
+                        _stat = connection.recv()
+                        self.stat.update(**_stat)
+                    except EOFError:
+                        self.connections.remove(connection)
+            assert self.writer.wrote_everything()
+            for w in self.workers:
+                w.join()
+            _reader_process.join()
+            self.writer.close()
+
+        except Exception as e:
+            # 确保在发生异常时清理资源
+            for w in self.workers:
+                try:
+                    w.terminate()
+                except:
+                    pass
+            try:
+                _reader_process.terminate()
+            except:
+                pass
+            try:
+                self.writer.close()
+            except:
+                pass
+            raise  # 重新抛出异常

@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 from collections import defaultdict
 from ..utils.helper import logger
@@ -17,6 +16,10 @@ def mapping_summary(STARLog, RnaSeqMetrics):
             if "Number of reads mapped to multiple loci" in line:
                 summary["Number of reads mapped to multiple loci"] = int(
                     line.strip().split("\t")[-1])
+            if "Number of reads mapped to too many loci" in line:
+                summary["Number of reads mapped to too many loci"] = int(
+                    line.strip().split("\t")[-1])
+
     with open(RnaSeqMetrics, "r") as fh:
         while True:
             line = fh.readline().strip()
@@ -39,11 +42,11 @@ def mapping_summary(STARLog, RnaSeqMetrics):
 
 
 def align(
-    fq:str, genomeDir:str, gtf:str, samplename:str, outdir:str, region:str, sc5p:bool,
+    fq:list, genomeDir:str, gtf:str, samplename:str, outdir:str, region:str, sc5p:bool,
     core:int=4, star_path:str="STAR", **kwargs):
 
     if ("steps" not in kwargs) or (not kwargs["steps"]):
-        kwargs["steps"] = ["STAR", "SortByPos", "FeatureCounts", "SortByName"]
+        kwargs["steps"] = ["STAR", "SortByPos", "qualimap",  "FeatureCounts", "SortByName"]
 
     basedir = os.path.join(outdir, "step2")
     STAR_dir = os.path.join(basedir, "STAR")
@@ -74,7 +77,8 @@ def align(
         bam = samtools_sort_wrapper(
             bam,
             f"{prefix}SortedByCoordinate.bam",
-            core=core
+            core=core,
+            clean=True,
         )
         logger.info("SortByPos done!")
     bam = f"{prefix}SortedByCoordinate.bam"
@@ -92,7 +96,7 @@ def align(
                     refj=json.load(refjson)
                     genome=refj["genomes"][0]
         else:
-                genome=genomeDir
+                genome=refpath.split("/")[-1]
         summary = json.load(fh)
         summary["reference"] = genome
         Total = summary["stat"]["total"]
@@ -105,7 +109,9 @@ def align(
     summary_tmp = defaultdict()
     tmp = mapping_summary(STARLog, RnaSeqMetrics)
     Total = tmp["Number of input reads"]
-    mapped_genome_ratio = tmp["reads aligned"]/Total
+    mapped_genome_ratio = (tmp["Uniquely mapped reads number"] +
+                           tmp["Number of reads mapped to multiple loci"] +
+                           tmp["Number of reads mapped to too many loci"])/Total
     summary_tmp["Reads Mapped to Genome"] = mapped_genome_ratio
 
     mapped_confident_ratio = (tmp["aligned to genes"] + tmp["no feature assigned"]) / Total
@@ -155,5 +161,6 @@ def align(
             os.path.join(featureCounts_dir, f"{samplename}_SortedByName.bam"),
             core=core,
             byname=True,
+            clean=True,
         )
         logger.info("SortByName done!")
