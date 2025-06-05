@@ -18,26 +18,6 @@ def cmd_execute(
     args, check:bool=False, text:bool=True,
     capture_output:bool=True, env:os.environ=None
 ):
-    """
-    执行命令，输出命令以进行调试。
-
-    参数：
-    args: list or str
-        要执行的命令或参数。
-    check: bool, 可选
-        是否检查命令执行结果，默认为 False。
-    text: bool, 可选
-        是否以文本形式执行命令，默认为 True。
-    capture_output: bool, 可选
-        是否捕获命令输出，默认为 True。
-    env: os.environ, 可选
-        执行命令的环境变量，默认为 None。
-
-    返回值：
-    _call
-        执行命令的返回结果。
-
-    """
 
     if isinstance(args, list):
         args = [str(_) for _ in args]
@@ -229,7 +209,6 @@ def bowtie2_wrapper(
     fq:str, ref:str, bam:str, core:int=1, local_mode=True,
     bowtie2_path:str="bowtie2", samtools_path:str="samtools"
 )->str:
-    """使用bowtie2比对，并用samtools转bam"""
     local_option = ""
     if local_mode:
         local_option = "--local"
@@ -300,7 +279,7 @@ def geneBody_coverage_wrapper(downsambam, downdir, samplename, gtf):
     with open(resultbed) as infile:
         with open(reductionbed,'w') as out:
             allbed=infile.readlines()
-            lines = random.sample(allbed,20000)
+            lines = random.sample(allbed, min(len(allbed), 20000))
             for line in lines:
                 out.write(line)
     cmd = f"cd {downdir}; geneBody_coverage.py -r {downdir}/{samplename}.reduction.bed -i {downsambam} -o {downdir}/{samplename}"

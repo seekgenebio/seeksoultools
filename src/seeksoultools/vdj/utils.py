@@ -127,21 +127,6 @@ def subset_reads(
     r2_fq:Path, r1_fq:Path|None=None, reads_limit:int=80000
 ):
     """
-    根据计数字典筛选并限制读取对的数量。
-
-    从给定的 barcode (bc)、UMI (umi) 和读取对 (r2以及可选的r1) 文件中，
-    筛选序列，并根据计数字典中的条目限制每个barcode的读取对数量。
-
-    参数:
-    - count_dict: 包含barcode计数的字典，键为barcode序列，值为计数。
-    - bc_fa: Barcode fasta文件的路径。
-    - umi_fa: UMI fasta文件的路径。
-    - r2_fq: 读取对2 (r2) fastq文件的路径。
-    - r1_fq: 可选的读取对1 (r1) fastq文件的路径，默认为None。
-    - reads_limit: 每个barcode的最大读取对数量限制，默认为80000。
-
-    返回:
-    无返回值，但会修改计数字典，并将筛选后的序列写入原始文件。
     """
     _bc_fa = bc_fa.replace(f"{bc_fa.parent}/_{bc_fa.name}")
     _umi_fa = umi_fa.replace(f"{umi_fa.parent}/_{umi_fa.name}")

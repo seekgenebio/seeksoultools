@@ -429,7 +429,6 @@ def barcode_main(fq1:list, fq2:list, samplename: str, outdir:str,
     r1_structure = parse_structure(structure)
     
     #get wl dict for bc/linker
-    # 当barcode或linker为空时，返回空字典
     barcode_wl_dict = read_file(barcode)
     linker_wl_dict = read_file(linker)
     match_type_dict = {ind: val for ind, val in enumerate(match_type)}

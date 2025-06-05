@@ -92,7 +92,6 @@ class websummaryRNA(websummary):
 
     def pre_diff_data(self, diff_table, n=50):
         df = pd.read_table(diff_table)
-        # df按cluster分组，并对每组以avg_log2FC排序后取前n行
         tmp = df.groupby('cluster').apply(lambda x: x.sort_values(by='avg_log2FC', ascending=False).head(n))
         self.data["Diff_data"] = tmp.loc[:,['Ensembl', 'gene', 'avg_log2FC', 'p_val_adj','cluster']].to_dict('records')
 
@@ -191,10 +190,8 @@ class websummaryRNA(websummary):
         bg_color = "rgba(221, 221, 221, 1.0)"
         d = []
 
-        # 背景部分
         df_bg = df.loc[~df.is_cell,:]
 
-        # 全部是细胞
         if df_bg.shape[0] == 0:
             msg = f"{100.0:.0f}% Cells<br>{df.shape[0]}/{df.shape[0]}"
             d.append({
@@ -205,10 +202,8 @@ class websummaryRNA(websummary):
             })
             return self._barcode_rank_data(d)
         
-        # 细胞部分
         df_cells = df[df.is_cell]
 	
-        # 全部是背景
         if df_cells.shape[0] == 0:
             d.append({
                 "x": 0,
@@ -218,20 +213,16 @@ class websummaryRNA(websummary):
             })
             return self._barcode_rank_data(d)
 
-        # 细胞和背景混合
         # BCCCC BCBBCBCCBBBBBBBBB
         # CCCCC BCBBCBCCBBBBBBBBB
-        # 第一个细胞之后的背景index
         idx_first = (df_bg[df_bg.idx > df_cells.idx.iloc[0]]).idx.iloc[0]
 
-        # 第一部分，起始到第一个细胞后的背景
         df_first = df[:idx_first]
         cell_ratio = df_first[df_first.is_cell].shape[0]/df_first.shape[0]
         msg = (f"{cell_ratio*100.0:.0f}% Cells<br>"
                 f"{df_first[df_first.is_cell].shape[0]}/{df_first.shape[0]}")
         d.append({
             "x": 0,
-            # +1, 保证线的连续     
             "y": df[:idx_first+1].UMI.tolist(),
             "text": msg,
             "color": cell_color.format(1.0),
@@ -239,19 +230,16 @@ class websummaryRNA(websummary):
 
         # BCCCC BCBBCBCCBBBBBBBBB
         # BCCCC BCBBCBCCBBBBBBBBC
-        # 最后一个细胞的index，之后是连续的背景或者空
         idx_last = df_cells.idx.iloc[-1]
 
         # BCCCC BCBBCBCC BBBBBBBBB
         #      |        |
         #   idx-first idx-last
-        # 第一个细胞之后的背景index和最后一个细胞的index之间
         n = 0
         idx_s = idx_first
         idx_e = idx_s + 1000*4**n
 
         while idx_e < idx_last:
-            # +1, 保证线的连续
             df_cells_mix = df[idx_s: idx_e]
             cell_ratio = df_cells_mix[df_cells_mix.is_cell].shape[0]/df_cells_mix.shape[0]
             msg = (f"{cell_ratio * 100.0:.0f}% Cells<br>"
@@ -267,8 +255,6 @@ class websummaryRNA(websummary):
             idx_e = idx_s + 1000*4**n
 
         if idx_s < idx_last:
-            # 由步长计算，终点超出连续背景的起点部分
-            # +1, 为了线的连续
             df_cells_mix = df[idx_s: idx_last+1]
             cell_ratio = df_cells_mix[df_cells_mix.is_cell].shape[0]/df_cells_mix.shape[0]
             msg = (f"{cell_ratio*100.0:.0f}% Cells<br>"

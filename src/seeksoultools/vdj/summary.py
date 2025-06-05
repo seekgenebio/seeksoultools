@@ -48,7 +48,6 @@ def cal_clonotype(barcode_clonotype_tsv:Path, clonotype_file:Path):
     total = 0
     with barcode_clonotype_tsv.open() as fh:
         header_dict = {k:i for i, k in enumerate(fh.readline().strip().split("\t"))}
-        # 检查必要的列是否存在，如果不存在则添加默认值
         if "locus_VDJ" not in header_dict:
             header_dict["locus_VDJ"] = len(header_dict)
         if "locus_VJ" not in header_dict:
@@ -64,7 +63,6 @@ def cal_clonotype(barcode_clonotype_tsv:Path, clonotype_file:Path):
             
         for line in fh:
             tmp = line.strip().split("\t")
-            # 如果列数不足，补充空值
             while len(tmp) <= max(header_dict.values()):
                 tmp.append("None")
                 
@@ -97,9 +95,9 @@ def cal_clonotype(barcode_clonotype_tsv:Path, clonotype_file:Path):
         single_chains = []
         for cdr3s_nt, cell_data_list in clone_data:
             chains_count = len(cdr3s_nt.split(';'))
-            if chains_count == 2:  # 双链
+            if chains_count == 2:  
                 paired_chains.append((cdr3s_nt, cell_data_list))
-            else:  # 单链
+            else:  
                 single_chains.append((cdr3s_nt, cell_data_list))
         
         if paired_chains:

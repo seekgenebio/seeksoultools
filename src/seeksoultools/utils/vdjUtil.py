@@ -19,13 +19,6 @@ def refine_table(
     map_dict:dict, 
     sep:str="\t",
 ) -> None:
-    """
-        infile: 输入文件
-        outfile: 输出文件
-        colnames: 需要调整的列
-        map_dict: 对应关系
-        sep: 分隔符
-    """
     with open(infile) as fh, \
         open(f"{outdir}/{os.path.basename(infile)}", "w") as fh_out:
         header_line = fh.readline().strip()

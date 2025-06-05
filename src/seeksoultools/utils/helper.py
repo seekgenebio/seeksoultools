@@ -61,11 +61,6 @@ def hamming_distance(s1, s2):
     return len([(i, j) for i, j in zip(s1, s2) if i != j])
 
 def read_gtf(gtf):
-    """从gtf中获取gene_id和Symbol的对应关系
-    1. 尝试从gene、transcript和exon行，获取对应关系
-    2. 尝试对线粒体Symbol加MT-前缀
-    3. Symbol重复时，并不会做处理
-    """
     
     gene_list = []
     mt_regex = re.compile("^(MT|mt|Mt)-")
@@ -80,7 +75,7 @@ def read_gtf(gtf):
             if line.startswith("#"): continue
             tmp = line.strip().split("\t")
 
-            # 处理gene，transcript和exon行
+            # gene，transcript and exon 
             if tmp[2] in ("gene", "transcript", "exon"):
                 gene_id = gene_id_regex.search(tmp[-1])
                 if not gene_id:
@@ -109,34 +104,11 @@ def read_gtf(gtf):
     return [[g, id_names_dict[g]] for g in gene_list]
 
 def parse_structure(string:str) -> tuple:
-    """解析接头结构
-
-    使用字母B、L、U、X和T以及数字表示reads结构。
-    B表示barcode部分碱基；
-    L表示linker部分碱基；
-    U表示umi部分碱基；
-    X表示任意碱基，用于占位；
-    T表示T碱基；
-    字母后数字表示碱基长度。
-
-    Args:
-        string: 接头结构描述
-
-    Returns:
-        返回二维tuple,内容为按顺序的各部分结构和长度。
-        例如：
-            当string是B8L8B8L10B8U8,返回:
-            (('B', 8), ('L', 8), ('B', 8), ('L', 10), ('B', 8), ('U', 8))
-    """
     regex = re.compile(r'([BLUXT])(\d+)')
     groups = regex.findall(string)
     return tuple([(_[0], int(_[1])) for _ in groups])
 
 def read_file(file_list: list) -> dict:
-    """准备白名单set
-        Args:
-            file_list: 每段白名单文件的路径
-    """
     wl_dict = dict()
     for i, wl_file in enumerate(file_list):
         white_list = set()
@@ -153,7 +125,6 @@ def read_file(file_list: list) -> dict:
 
 
 def get_new_bc(bc:str, white_list:set, distance:int)->set:
-    """返回原始barcode各位置错配后的set与白名单set的交集"""
 
     if distance == 1:
         BASE_LIST = ["T", "C", "G", "A"]
@@ -182,7 +153,6 @@ def get_new_bc(bc:str, white_list:set, distance:int)->set:
     return bc_set
 
 class AdapterFilter:
-    """过滤接头"""
     def __init__(self, adapter1:list=[], adapter2:list=[],):
         self.adapter1 = [BackAdapter(sequence=_) if p=="3" else RightmostFrontAdapter(sequence=_) for _, p in adapter1]
         self.adapter2 = [BackAdapter(sequence=_) if p=="3" else RightmostFrontAdapter(sequence=_) for _, p in adapter2]
@@ -208,7 +178,6 @@ class AdapterFilter:
         return flag, r1, r2
 
 class QcStat:
-    """汇总统计"""
     def __init__(self):
         self.data = { }
 

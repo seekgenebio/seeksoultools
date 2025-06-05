@@ -6,21 +6,18 @@ import dnaio
 from xopen import xopen
 
 class Reader(Process):
-    """
-    读取paired fastq
-    """
     def __init__(self, file1:str, file2:str, connections:multiprocessing.connection, queue:Queue, buffer_size:int):
-        """初始化读入进程
+        """
 
         Args:
             file1: read1 fastq file
             file2: read2 fastq file
             connections: 
-            queue: 存放空闲工作进程index的队列
-            buffer_size: 读取fastq时的buffer大小
+            queue: 
+            buffer_size: buffer
         
         Returns:
-            Reader对象
+            Reader
 
         """
         super().__init__()
@@ -52,14 +49,11 @@ class Reader(Process):
             raise e
 
 class Writer:
-    """
-    处理输出内容
-    """
     def __init__(self, file:str, file_multi:str, paired_out:bool=False):
-        """输出处理好的序列
+        """
         Args:
             file: read2 fastq file
-            file_muti: 不能确定barcode的fastq文件名称
+            file_muti: unknow barcode
         """
         self.paired_out = paired_out
 
@@ -113,7 +107,7 @@ class Writer:
             self._fh_multi2.close()
 
 class Worker(Process):
-    """工作进程类
+    """
     """
     def __init__(self, id_, read_pipe, write_pipe, need_work_queue, func, paired_out=False):
         """
@@ -239,7 +233,6 @@ class Pipeline:
             self.writer.close()
 
         except Exception as e:
-            # 确保在发生异常时清理资源
             for w in self.workers:
                 try:
                     w.terminate()
@@ -253,4 +246,4 @@ class Pipeline:
                 self.writer.close()
             except:
                 pass
-            raise  # 重新抛出异常
+            raise  

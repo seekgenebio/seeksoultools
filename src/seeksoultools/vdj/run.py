@@ -49,7 +49,6 @@ def run_trust4(
     turst_wd = wd /"Analysis"/"trust4"
     turst_wd.mkdir(exist_ok=True, parents=True)
     if not read_pair:
-        # 去除r1
         readFormat = ",".join([e for e in readFormat.split(",") if not e.startswith("r1:")])
 
     from ..utils.wrappers import fastq_extractor_wrapper
