@@ -1,1 +1,0 @@
-/PROJ2/FLOAT/zhaomeng/software/git_seeksoultools/seeksoultools/src/search-pattern/target/debug/search-pattern: /PROJ2/FLOAT/zhaomeng/software/git_seeksoultools/seeksoultools/src/search-pattern/src/main.rs

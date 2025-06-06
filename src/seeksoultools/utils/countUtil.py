@@ -66,7 +66,6 @@ def multiple_alignment(reads, gene_ids, gtf_tree):
     for read in reads:
         chrm, pos = read.reference_name, read.pos
         all_matches = gtf_tree[chrm][pos]
-        logger.info(all_matches)
         for match in all_matches:
             match_dict =  match.data
             if match_dict["gene_id"] in gene_ids and ("exon_id" in match_dict.keys() or match_dict["type"] == "exon"):

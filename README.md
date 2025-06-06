@@ -15,7 +15,7 @@ The tools includes the following main modules:
 ## System Requirements
 
 - Linux operating system
-- Conda package manager
+- [Conda](https://docs.conda.io/en/latest/) package manager
 - Minimum 8GB RAM (16GB recommended)
 - Sufficient disk space for data processing (at least 100GB recommended)
 
@@ -27,25 +27,35 @@ git clone git@github.com:seekgenebio/seeksoultools.git
 cd seeksoultools
 ```
 
-2. Create and activate conda environment:
+2. Configure conda channels (Optional, recommended for users in China):
+```bash
+# Add Tsinghua mirror for faster download in China
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+conda config --set show_channel_urls yes
+
+# Configure pip mirror (Optional, recommended for users in China)
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+3. Create and activate conda environment:
 ```bash
 conda env create -n seeksoultools -f conda_dependencies.yml
 conda activate seeksoultools
 ```
 
-3. Install the main package:
+4. Install the main package:
 ```bash
 pip install .
 ```
 
-4. Install additional dependencies:
+5. Install additional dependencies:
 ```bash
 cd src/search-pattern
-maturin build
 pip install target/wheels/search_pattern-*.whl
 cd ../simpleqc
-maturin build
-pip install target/wheels/search_pattern-*.whl
+pip install target/wheels/simpleqc-*.whl
 ```
 
 ## Usage
@@ -67,7 +77,6 @@ seeksoultools multivdj --help
 ```
 
 For detailed usage instructions and examples, please refer to the official documentation.
-
 
 ## Support
 

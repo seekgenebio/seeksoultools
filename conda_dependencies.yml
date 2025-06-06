@@ -1,6 +1,8 @@
 name: base
 channels:
-- https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
+- bioconda
+- conda-forge
+- defaults
 dependencies:
 - r-base=4.2.2
 - bioconductor-dropletutils=1.18.0
@@ -33,5 +35,6 @@ dependencies:
 - perl=5.32.1
 - biopython=1.81
 - trust4=1.1.4
+- psutil=7.0.0
 - pip:
- - dandelion=0.5.5
+  - sc-dandelion==0.5.5
