@@ -23,7 +23,7 @@ The tools includes the following main modules:
 
 1. Clone the repository:
 ```bash
-git clone git@github.com:seekgenebio/seeksoultools.git
+git clone https://github.com/seekgenebio/seeksoultools.git
 cd seeksoultools
 ```
 
