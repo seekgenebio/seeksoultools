@@ -49,7 +49,9 @@ pip config set global.index-url https://pypi.org/simple
 
 3. Install the  package:
 ```bash
-pip install . src/simpleqc/target/wheels/simpleqc-0.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl src/search-pattern/target/wheels/search_pattern-0.1.0-py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl
+pip install . \
+  src/simpleqc/target/wheels/simpleqc-0.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl \
+  src/search-pattern/target/wheels/search_pattern-0.1.0-py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl
 ```
 
 
@@ -64,11 +66,11 @@ seeksoultools rna --help
 # Full-length-seq analysis
 seeksoultools fast --help
 
-# V(D)J analysis
-seeksoultools vdj --help
-
 # Combined RNA and V(D)J analysis
 seeksoultools multivdj --help
+
+# V(D)J analysis (without RNA-seq)
+seeksoultools vdj --help
 ```
 For detailed usage instructions and examples, please refer to the official documentation.
 

@@ -2,7 +2,7 @@
 # # # This environment includes all necessary dependencies for single-cell transcriptome analysis,
 # # # including RNA-seq, V(D)J sequencing, and full-length transcriptome analysis workflows.
 # # # Version: 1.3.0
-name: base
+name: seeksoultools
 channels:
 - bioconda
 - conda-forge

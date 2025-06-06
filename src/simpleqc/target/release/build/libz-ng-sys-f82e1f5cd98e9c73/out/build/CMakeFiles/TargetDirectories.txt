@@ -1,9 +1,0 @@
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/zlib.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/package.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/package_source.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/edit_cache.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/rebuild_cache.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/list_install_components.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/install.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/install/local.dir
-/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/build/libz-ng-sys-f82e1f5cd98e9c73/out/build/CMakeFiles/install/strip.dir
