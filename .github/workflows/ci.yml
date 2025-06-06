@@ -12,9 +12,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest, centos-7, centos-8]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -43,6 +41,8 @@ jobs:
       - name: Run CLI tests
         shell: bash -l {0}
         run: |
+          simpleqc -h
+          search-pattern -h
           seeksoultools --help
           seeksoultools rna --help
           seeksoultools fast --help
