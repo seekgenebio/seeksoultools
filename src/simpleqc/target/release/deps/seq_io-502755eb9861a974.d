@@ -1,0 +1,11 @@
+/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/deps/libseq_io-502755eb9861a974.rmeta: /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/lib.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fasta.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fastq.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/parallel.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/policy.rs
+
+/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/deps/libseq_io-502755eb9861a974.rlib: /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/lib.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fasta.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fastq.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/parallel.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/policy.rs
+
+/PROJ2/FLOAT/luoyunchao/tmp/seeksoultools/src/simpleqc/target/release/deps/seq_io-502755eb9861a974.d: /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/lib.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fasta.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fastq.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/parallel.rs /PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/policy.rs
+
+/PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/lib.rs:
+/PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fasta.rs:
+/PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/fastq.rs:
+/PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/parallel.rs:
+/PROJ/home/luoyunchao/.cargo/registry/src/index.crates.io-6f17d22bba15001f/seq_io-0.3.2/src/policy.rs:
