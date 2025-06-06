@@ -1,6 +1,6 @@
-# seeksoultools
+# SeekSoulTools
 
-SeekSoulTools is a comprehensive software suite developed by SeekGene for processing single-cell transcriptome data, supporting various single-cell sequencing data analysis workflows.
+SeekSoulTools is a professional bioinformatics toolkit developed by SeekGene for comprehensive single-cell transcriptome analysis. It provides robust solutions for RNA-seq, V(D)J sequencing, and full-length transcriptome analysis, featuring high accuracy, efficiency, and user-friendly interfaces. The toolkit is specifically optimized for SeekOne® series kits while maintaining compatibility with various custom designs.
 
 ## Features
 
@@ -27,36 +27,31 @@ git clone git@github.com:seekgenebio/seeksoultools.git
 cd seeksoultools
 ```
 
-2. Configure conda channels (Optional, recommended for users in China):
-```bash
-# Add Tsinghua mirror for faster download in China
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
-conda config --set show_channel_urls yes
+2. Create and activate conda environment:
 
-# Configure pip mirror (Optional, recommended for users in China)
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+For users in China:
+```bash
+conda env create -n seeksoultools -f conda_dependencies.zh.yml
+conda activate seeksoultools
 ```
 
-3. Create and activate conda environment:
+For international users:
 ```bash
 conda env create -n seeksoultools -f conda_dependencies.yml
 conda activate seeksoultools
 ```
 
-4. Install the main package:
+Note: If you encounter slow download speeds or installation issues with pip packages, you can try using alternative PyPI mirrors in your region:
 ```bash
-pip install .
+# Use PyPI mirrors
+pip config set global.index-url https://pypi.org/simple
 ```
 
-5. Install additional dependencies:
+3. Install the  package:
 ```bash
-cd src/search-pattern
-pip install target/wheels/search_pattern-*.whl
-cd ../simpleqc
-pip install target/wheels/simpleqc-*.whl
+pip install . src/simpleqc/target/wheels/simpleqc-0.1.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl src/search-pattern/target/wheels/search_pattern-0.1.0-py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl
 ```
+
 
 ## Usage
 
@@ -75,9 +70,9 @@ seeksoultools vdj --help
 # Combined RNA and V(D)J analysis
 seeksoultools multivdj --help
 ```
-
 For detailed usage instructions and examples, please refer to the official documentation.
 
 ## Support
 
 For technical support or questions, please contact SeekGene support team or open an issue on GitHub.
+

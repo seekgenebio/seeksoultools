@@ -1,12 +1,13 @@
 # # SeekSoulTools Environment Configuration
-# # # This environment includes all necessary dependencies for single-cell transcriptome analysis,
-# # # including RNA-seq, V(D)J sequencing, and full-length transcriptome analysis workflows.
-# # # Version: 1.3.0
+# # This environment includes all necessary dependencies for single-cell transcriptome analysis,
+# # including RNA-seq, V(D)J sequencing, and full-length transcriptome analysis workflows.
+# # Version: 1.3.0
 name: base
 channels:
-- bioconda
-- conda-forge
-- defaults
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+- https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
 dependencies:
 - r-base=4.2.2
 - bioconductor-dropletutils=1.18.0
@@ -41,4 +42,5 @@ dependencies:
 - trust4=1.1.4
 - psutil=7.0.0
 - pip:
+  - --index-url https://pypi.tuna.tsinghua.edu.cn/simple
   - sc-dandelion==0.5.5
