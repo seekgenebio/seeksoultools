@@ -1,14 +1,14 @@
 # SeekSoulTools
 
-SeekSoulTools is a professional bioinformatics toolkit developed by SeekGene for comprehensive single-cell transcriptome analysis. It provides robust solutions for RNA-seq, V(D)J sequencing, and full-length transcriptome analysis, featuring high accuracy, efficiency, and user-friendly interfaces. The toolkit is specifically optimized for SeekOne® series kits while maintaining compatibility with various custom designs.
+SeekSoulTools is a professional bioinformatics toolkit developed by SeekGene for comprehensive single-cell transcriptome analysis. It provides robust solutions for RNA-seq, V(D)J sequencing, and full-length transcriptome analysis, featuring high accuracy, efficiency, and user-friendly interfaces. The toolkit is specifically optimized for SeekOne™ series kits while maintaining compatibility with various custom designs.
 
 ## Features
 
 The tools includes the following main modules:
 
-- **rna module**: Identifies cell barcodes, performs alignment and quantification, generates cell expression matrices for downstream analysis, and supports cell clustering and differential analysis. Compatible with SeekOne® series kits and various custom designs.
-- **fast module**: Specifically designed for SeekOne® DD single-cell full-sequence transcriptome kits and FFPE samples, enabling barcode extraction, paired-end read alignment, quantification, and full-sequence specific metrics.
-- **vdj module**: Tailored for SeekOne® DD single-cell immune analysis kits, facilitating the assembly, filtering, and annotation of immune receptors.
+- **rna module**: Identifies cell barcodes, performs alignment and quantification, generates cell expression matrices for downstream analysis, and supports cell clustering and differential analysis. Compatible with SeekOne™ series kits and various custom designs.
+- **fast module**: Specifically designed for SeekOne™ DD single-cell full-sequence transcriptome kits and FFPE samples, enabling barcode extraction, paired-end read alignment, quantification, and full-sequence specific metrics.
+- **vdj module**: Tailored for SeekOne™ DD single-cell immune analysis kits, facilitating the assembly, filtering, and annotation of immune receptors.
 - **multivdj module**: Integrated analysis pipeline for combined RNA-seq and V(D)J sequencing data, supporting simultaneous processing of RNA, TCR, and BCR data with comprehensive reporting.
 - **utils module**: Contains additional utility tools to assist in data processing and analysis.
 
